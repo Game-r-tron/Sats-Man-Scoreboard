@@ -18,12 +18,14 @@
 <h1 align="center">Sats-Man Scoreboard</h1>
 <table align="center">
     <tr>
+      <th>Position</th>
       <th>Score</th>
       <th>Twitter Handle</th>
       <th>Date</th>
     </tr>
     {% for Score in score_list_all %}
-    <tr>
+        <tr>
+      <td>{{ forloop.counter }}</td>
       <td>{{Score.score_value}}</td>
       <td><a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">@{{Score.twitter_handle}}</td>
       <td>{{Score.score_date}}</td>

@@ -35,7 +35,7 @@ def index(request):
 
 class ScoreboardApiView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.AllowAny]
 
     # 1. List all
     def get(self, request, *args, **kwargs):
@@ -56,6 +56,7 @@ class ScoreboardApiView(APIView):
             'score_date': request.data.get('score_date'), 
             'twitter_handle' : request.data.get('twitter_handle'),   
         }
+
         serializer = ScoreSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
