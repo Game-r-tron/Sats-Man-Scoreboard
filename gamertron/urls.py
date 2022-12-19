@@ -1,4 +1,4 @@
-"""SatsMan URL Configuration
+"""Gamertron URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.0/topics/http/urls/
@@ -18,8 +18,9 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    path('', RedirectView.as_view(url='scoreboard/', permanent=True)),
+    #path('', RedirectView.as_view(url='satsman-scoreboard/', permanent=True)),
     path('admin/', admin.site.urls),
-    path('scoreboard/',include('Scoreboard.urls')),
+    path('satsman-scoreboard/',include('satsmanscoreboard.urls')),
     path('api-auth/',include('rest_framework.urls')),
+    path('explorer/', include('explorer.urls')),
 ]
