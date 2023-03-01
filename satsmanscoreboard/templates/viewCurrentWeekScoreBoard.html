@@ -6,7 +6,6 @@
       <META HTTP-EQUIV=”refresh” CONTENT=”15″>
       <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
       <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
-      <script src="{% static 'satsmanscoreboard/javascript/countdown42.js' %}""></script>
   </head>
 <body>
 <p align="center">
@@ -16,7 +15,7 @@
 <h2 align="center"><a href="/satsman-game" target="_blank">Play Sats-Man</a></h2>
 <p align="center"><a href="/satsman-scoreboard/top/5">All Time Top 5</a> | <a href="/satsman-scoreboard/top/10">All Time Top 10</a> | <a href="/satsman-scoreboard/all">All Scores Ever</a> | <a href="/satsman-scoreboard/date/{{current_year}}/{{last_week}}">All Last Week</a> | <a href="/satsman-scoreboard/date/{{current_year}}/{{current_week}}">All Current Week</a></p>
 <h1 align="center">{{title}}</h1>
-<h2 align="center">{{prize}} - Countdown: <span align="center" id="countdown"></span></h2>
+<h2 align="center">{{prize}}</h2>
 
 <table align="center">
     <tr>

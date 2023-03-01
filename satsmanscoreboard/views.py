@@ -14,8 +14,9 @@ import requests, json
 import datetime
 import uuid
 import datetime
+import config
 
-zbd_api_key = 'SECRET'
+zbd_api_key = config.zbd_api_key
 
 def index(request):
     """Paid scoreboard - All"""
