@@ -14,19 +14,38 @@
   <span><a href="lightning:lnurl1dp68gurn8ghj7ctsdyh85etzv4jx2efwd9hj7a3s9aex2ut4v4ehgttnw3shg6tr943ksctjvajhxte5xymk2cnrvvcz6cfsxcmj6dp4x3jj6cnz89jz6vpkv4jkxvmzve3nzd35x92n7t"><img src="{% static 'satsmanscoreboard/images/zbd-lnurl.png' %}" alt="ZBD LNURL" width="200" height="200"></a></span>    <span><a href="https://sites.google.com/nathanday.net/gamertron/sats-man" target="_blank"><img src="{% static 'satsmanscoreboard/images/sats-man-logo.png' %}" alt="Sats-Man Logo"></a></span>    <span><a href="http://gamertron.net" target="_blank"><img src="{% static 'satsmanscoreboard/images/gamertron-logo.jpg' %}" alt="Gamertron Logo" width="200" height="200"></a></span>
 </p>
 <h1 align="center">Your score is {{score}}</h1>
-<p align="center">
-  Enter your details below to submit your score.
-</p>
 <div align="center">
-    <form id="data-form">
-        <label for="twitter_handle">Twitter handle:</label><input type="text" id="twitter_handle" name="twitter_handle">
+  <form id="data-form">
+    <table>
+        <tr>
+          <td colspan="2" align="center">Enter your details below to submit your score.</td>
+        </tr>
+        <tr>
+            <td><label for="nip05">Nostr NIP-05:</label></td>
+            <td><input type="text" id="nip05" name="nip05" placeholder="optional"></td>
+        </tr>
+        <tr>
+            <td><label for="npub">Nostr npub:</label></td>
+            <td><input type="text" id="npub" name="npub" placeholder="optional"></td>
+        </tr>
+        <tr>
+            <td><label for="ln_address">LN Address:</label></td>
+            <td><input type="text" id="ln_address" name="ln_address" placeholder="optional"></td>
+        </tr>
+        <tr>
+            <td><label for="twitter_handle">Twitter handle:</label></td>
+            <td><input type="text" id="twitter_handle" name="twitter_handle" placeholder="optional"></td>
+        </tr>
+        <tr>
+            <td><label for="event_code">Event code:</label></td>
+            <td><input type="text" id="event_code" name="event_code" placeholder="optional" value="{{event_code}}"></td>
+        </tr>
+        <tr>
+            <td colspan="2" align="center"><button type="submit">Submit</button></td>
+        </tr>
+    </table>
+</form>
 
-        <label for="npub">Nostr npub:</label><input type="text" id="npub" name="npub">
-
-        <label for="event_code">Event code:</label><input type="text" id="event_code" name="event_code">
-
-        <button type="submit">Submit</button>
-    </form>
 </div> 
 
     <script>
@@ -39,38 +58,49 @@
             id: "{{score_id}}",
             twitter_handle: document.getElementById('twitter_handle').value,
             npub: document.getElementById('npub').value,
+            nip05: document.getElementById('nip05').value,
+            ln_address: document.getElementById('ln_address').value,
             event: document.getElementById('event_code').value
         };
 
-
         axios.post('/satsman-scoreboard/payment-made', formData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                console.log('Data submitted successfully:', response.data);
-                window.location.href = '/satsman-scoreboard/date/{{current_year}}/{{current_week}}';
-            })
-            .catch(error => {
-                console.error('Error submitting data:', error);
-                alert("Error: " + "Details already submitted");
-            });
-      });
+        headers: {
+            'Content-Type': 'application/json'
+        }
+        })
+        .then(response => {
+        
+         console.log('Data submitted successfully:', response.data);
+        
+        var event_code = document.getElementById('event_code').value;
+        
+        if (event_code) {
+            window.location.href = '/satsman-scoreboard/event/' + event_code;
+        } else {
+            window.location.href = '/satsman-scoreboard/date/{{current_year}}/{{current_week}}';
+        }
+        })
+          .catch(error => {
+          console.error('Error submitting data:', error);
+          alert("Error: " + "Details already submitted");
+        });
+        });
+
   </script>
 
 </body>
 </html>
 
 <h2 align="center">
-  Current Week's Scoreboard
+  Current Scoreboard
 </h2>
 
 <table align="center">
     <tr>
       <th>Position</th>
       <th>Score</th>
-      <th>Nostr npub</th>
+      <th>Nostr npub/nip-05</th>
+      <th>LN Address</th>
       <th>Twitter Handle</th>
       <th>Date (UTC)</th>
     </tr>
@@ -78,7 +108,13 @@
     <tr>
       <td>{{ forloop.counter }}</td>
       <td>{{Score.score_value}}</td>
-      <td align="center"><a href="https://snort.social/p/{{Score.npub}}" target="_blank">{{Score.npub|nostr_short}}</a>
+      <td align="center"><a href={% if Score.nip05 %}"https://snort.social/p/{{Score.nip05}}"{% elif Score.npub %}"https://snort.social/p/{{Score.npub}}"{% endif %} target="_blank">{% if Score.nip05 %}
+        {{ Score.nip05 }}
+        {% elif Score.npub %}
+        {{Score.npub|nostr_short }}
+        {% else %}
+        {% endif %}</a>
+      <td align="center"><a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a>  
       <td align="center"><a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">{{Score.twitter_handle}}</a></td>
       <td>{{Score.score_date}}</td>
     </tr>

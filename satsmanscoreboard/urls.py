@@ -21,6 +21,8 @@ urlpatterns = [
     path('all', views.all, name='all'),
     path('api', ScoreboardApiView.as_view()),
     path('zbd', ZBDAPIView.as_view()),
+    path('enter-details/<str:score_id>', views.enter_details, name='score_id'),
+    path('enter-details/<str:score_id>/<str:event_code>', views.enter_details_event, name='score_id_event'),
     path('payment-made', PaidAPIView.as_view()),
     path('payment-check', PaymentCheckAPIView.as_view()),
 ]
