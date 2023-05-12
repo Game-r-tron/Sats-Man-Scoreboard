@@ -1,5 +1,5 @@
 from contextlib import nullcontext
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import HttpRequest, HttpResponse, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from .models import Score
 from django.views import generic
@@ -222,6 +222,66 @@ def datetop(request, year, week, top):
         return render(request, 'viewScoreBoard.html', context=context)
 
 
+def enter_details(request, score_id):
+    """Paid scoreboard - Enter details"""
+
+    prize = "Prize Pool: 10,000 sats"
+    current_year = datetime.date.today().isocalendar()[0]
+    current_week = datetime.date.today().isocalendar()[1]    
+
+    score_list = Score.objects.filter(score_date__year=current_year).filter(score_date__week=current_week).filter(paid=True).order_by('-score_value')
+    
+    if Score.objects.filter(id=score_id).exists():
+    
+        score = Score.objects.get(id=score_id).score_value
+        
+        context = {
+            'score_id':score_id,
+            'score_list':score_list,
+            'current_week': current_week,
+            'current_year': current_year,
+            'score': score,
+            'prize': prize
+        }
+
+        return render(request, 'enterUserDetails.html', context=context)
+
+    else:
+
+        return HttpResponseBadRequest("Score ID doesn't exist.")
+    
+
+def enter_details_event(request, score_id, event_code):
+    """Paid scoreboard - Enter details with Event Code"""
+
+    prize = "Prize Pool: 10,000 sats"
+    current_year = datetime.date.today().isocalendar()[0]
+    current_week = datetime.date.today().isocalendar()[1]    
+
+    score_list = Score.objects.filter(event=event_code).filter(paid=True).order_by('-score_value')
+    
+    if Score.objects.filter(id=score_id).exists():
+    
+        score = Score.objects.get(id=score_id).score_value
+        
+        context = {
+            'score_id':score_id,
+            'score_list':score_list,
+            'event_code':event_code,
+            'current_week': current_week,
+            'current_year': current_year,
+            'score': score,
+            'prize': prize
+        }
+
+        return render(request, 'enterUserDetails.html', context=context)
+
+    else:
+
+        return HttpResponseBadRequest("Score ID doesn't exist.")
+
+
+
 class ScoreboardApiView(APIView):
     # add permission to check if user is authenticated
     permission_classes = (IsAuthenticated,)
@@ -304,26 +364,39 @@ class ZBDAPIView(APIView):
     
         return Response(data=None, status=status.HTTP_202_ACCEPTED)
 
-
 class PaidAPIView(APIView):
     # add permission to check if user is authenticated
-    permission_classes = (IsAuthenticated,)
+    permission_classes = [permissions.AllowAny]
 
     # 1. Update
     def post(self, request, *args, **kwargs):
         '''
-        Update score with invoice payment status
+        Update score with player details
         '''
 
         JSON = request.data
-        
-        score = Score.objects.get(id=JSON["id"])
-        
-        if score.twitter_handle == "":
-        
-            score.twitter_handle = JSON["twitter_handle"]
-            score.event = JSON["event"]
-            score.save()
+        score_id = JSON["id"]
+
+        #Only allow an update for a known score ID
+        if Score.objects.filter(id=score_id).exists():
+
+            score = Score.objects.get(id=score_id)
+
+            #Only allow a single update
+            if score.updated:
+            
+                return Response(data=None, status=status.HTTP_403_FORBIDDEN)
+
+            else:
+
+                score.updated = True
+                score.twitter_handle = JSON["twitter_handle"]
+                score.npub = JSON["npub"]
+                score.nip05 = JSON["nip05"]
+                score.ln_address = JSON["ln_address"]
+                score.event = JSON["event"]
+                score.save()
+
             return Response(data=None, status=status.HTTP_202_ACCEPTED)
 
         else:

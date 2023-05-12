@@ -54,9 +54,15 @@
           
         e.preventDefault();
 
+        var twitterHandle = document.getElementById('twitter_handle').value;
+
+        if (twitterHandle.startsWith('@')) {
+          twitterHandle = twitterHandle.substring(1); // Remove the first character
+        };
+
         const formData = {
             id: "{{score_id}}",
-            twitter_handle: document.getElementById('twitter_handle').value,
+            twitter_handle: twitterHandle,
             npub: document.getElementById('npub').value,
             nip05: document.getElementById('nip05').value,
             ln_address: document.getElementById('ln_address').value,

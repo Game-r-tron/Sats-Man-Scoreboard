@@ -33,7 +33,8 @@ except KeyError as e:
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['games.gamertron.net']
 
 
 # Application definition
@@ -49,7 +50,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'explorer',
 ]
 
 MIDDLEWARE = [
@@ -160,7 +160,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 CSRF_TRUSTED_ORIGINS = ['https://games.gamertron.net']
 
 #Django SQL Explorer
-EXPLORER_CONNECTIONS = { 'Default': 'default' }
-EXPLORER_DEFAULT_CONNECTION = 'default'
-EXPLORER_TOKEN_AUTH_ENABLED = True
-EXPLORER_TOKEN = "CHANGEME"
+#EXPLORER_CONNECTIONS = { 'Default': 'default' }
+#EXPLORER_DEFAULT_CONNECTION = 'default'
+#EXPLORER_TOKEN_AUTH_ENABLED = True
+#EXPLORER_TOKEN = "CHANGEME"
