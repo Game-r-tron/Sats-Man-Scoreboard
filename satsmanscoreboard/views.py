@@ -14,9 +14,9 @@ import requests, json
 import datetime
 import uuid
 import datetime
-import config
+import os
 
-zbd_api_key = config.zbd_api_key
+zbd_api_key = os.environ["zbd_api_key"]
 
 def index(request):
     """Paid scoreboard - All"""
@@ -82,6 +82,11 @@ def event(request, event):
     title = "A L L  S C O R E S @  - " + event.upper() 
     score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')
 
+    if event == 'miami23':
+        prize = "Prize Pool: 100,000 sats!"
+    else:
+        prize = "Prize Pool: 0 sats"
+
     current_year = datetime.date.today().isocalendar()[0]
     current_week = datetime.date.today().isocalendar()[1]
     last_week = current_week - 1
@@ -91,10 +96,11 @@ def event(request, event):
         'title': title,
         'current_week': current_week,
         'last_week': last_week,
-        'current_year': current_year
+        'current_year': current_year,
+        'prize': prize
     }
 
-    return render(request, 'viewScoreBoard.html', context=context)
+    return render(request, 'viewEventScoreBoard.html', context=context)
 
 def eventtop(request, event, top):
     """Paid scoreboard - Event Top"""
@@ -102,6 +108,11 @@ def eventtop(request, event, top):
     title = "T O P  " + str(top) +  " @  - " + event.upper()
     score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')[:top]
 
+    if event == 'miami23':
+        prize = "Prize Pool: 100,000 sats!"
+    else:
+        prize = "Prize Pool: 0 sats"
+
     current_year = datetime.date.today().isocalendar()[0]
     current_week = datetime.date.today().isocalendar()[1]
     last_week = current_week - 1
@@ -111,10 +122,11 @@ def eventtop(request, event, top):
         'title': title,
         'current_week': current_week,
         'last_week': last_week,
-        'current_year': current_year
+        'current_year': current_year,
+        'prize': prize
     }
 
-    return render(request, 'viewScoreBoard.html', context=context)
+    return render(request, 'viewEventScoreBoard.html', context=context)
 
 def date(request, year, week):
     """Paid scoreboard - Date"""
@@ -254,7 +266,11 @@ def enter_details(request, score_id):
 def enter_details_event(request, score_id, event_code):
     """Paid scoreboard - Enter details with Event Code"""
 
-    prize = "Prize Pool: 10,000 sats"
+    if event_code == 'miami23':
+        prize = "MIAMI23 Prize Pool: 100,000 sats!"
+    else:
+        prize = "Prize Pool: 0 sats"
+
     current_year = datetime.date.today().isocalendar()[0]
     current_week = datetime.date.today().isocalendar()[1]    
 
@@ -274,7 +290,7 @@ def enter_details_event(request, score_id, event_code):
             'prize': prize
         }
 
-        return render(request, 'enterUserDetails.html', context=context)
+        return render(request, 'enterEventUserDetails.html', context=context)
 
     else:
 

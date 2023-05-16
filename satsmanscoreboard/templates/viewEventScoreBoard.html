@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-  {% load static %}
-  {% load filters %}
-  <head>
-      <title>Sats-Man Scoreboard</title>
-      <META HTTP-EQUIV=”refresh” CONTENT=”15″>
-      <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
-      <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
-  </head>
+{% load static %}
+{% load filters %}
+<head>
+    <title>Sats-Man Scoreboard</title>
+    <META HTTP-EQUIV=”refresh” CONTENT=”15″>
+    <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
+    <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
+</head>
 <body>
 <p align="center">
   <span><a href="lightning:lnurl1dp68gurn8ghj7ctsdyh85etzv4jx2efwd9hj7a3s9aex2ut4v4ehgttnw3shg6tr943ksctjvajhxte5xymk2cnrvvcz6cfsxcmj6dp4x3jj6cnz89jz6vpkv4jkxvmzve3nzd35x92n7t"><img src="{% static 'satsmanscoreboard/images/zbd-lnurl.png' %}" alt="ZBD LNURL" width="200" height="200"></a></span>    <span><a href="https://sites.google.com/nathanday.net/gamertron/sats-man" target="_blank"><img src="{% static 'satsmanscoreboard/images/sats-man-logo.png' %}" alt="Sats-Man Logo"></a></span>    <span><a href="http://gamertron.net" target="_blank"><img src="{% static 'satsmanscoreboard/images/gamertron-logo.jpg' %}" alt="Gamertron Logo" width="200" height="200"></a></span>
@@ -17,7 +17,7 @@
 <p align="center"><a href="/satsman-scoreboard/top/5">All Time Top 5</a> | <a href="/satsman-scoreboard/top/10">All Time Top 10</a> | <a href="/satsman-scoreboard/all">All Scores Ever</a> | <a href="/satsman-scoreboard/date/{{current_year}}/{{last_week}}">All Last Week</a> | <a href="/satsman-scoreboard/date/{{current_year}}/{{current_week}}">All Current Week</a></p>
 <h1 align="center">{{title}}</h1>
 <h1 align="center">{{prize}}</h1>
-<h2 align="center">1 point = 1 ticket in weekly prizedraw</h2>
+<h2 align="center">1 point = 1 ticket in the end of conference prizedraw</h2>
 <table align="center">
   <tr>
     <th>Position</th>
