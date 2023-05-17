@@ -16,56 +16,28 @@ import uuid
 import datetime
 import os
 
-zbd_api_key = os.environ["zbd_api_key"]
+# TODO
+# Pull out current/last week calcs into a single code block
+# Event sepecific prizes into the Model
+# Remove any event scores from any date-based score views.
+# Move API Views out into seperate class
 
-def index(request):
-    """Paid scoreboard - All"""
+#Import ZBD API key from environment.
+try:
+    zbd_api_key = os.environ["zbd_api_key"]
+except KeyError as e:
+    raise RuntimeError("Could not find a zbd_api_key in environment") from e
 
-    title = "A L L  S C O R E S  E V E R"
-    score_list = Score.objects.filter(paid=True).order_by('-score_value')
-
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
-   
-    context = {
-        'score_list': score_list,
-        'title': title,
-        'current_week': current_week,
-        'last_week': last_week,
-        'current_year': current_year
-    }
-
-    return render(request, 'viewScoreBoard.html', context=context)
-
-def top(request, top):
-    """Paid scoreboard - All"""
-    title = "A L L  T I M E  T O P  " + str(top)
-    score_list = Score.objects.filter(paid=True).order_by('-score_value')[:top]
-
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
-  
-    context = {
-        'score_list': score_list,
-        'title': title,
-        'current_week': current_week,
-        'last_week': last_week,
-        'current_year': current_year
-    }
-
-    return render(request, 'viewScoreBoard.html', context=context)
-
+# Passes all scrores to viewScoreBoard.html
 def all(request):
     """Paid scoreboard - Top"""
     title = "A L L  S C O R E S  E V E R"
     score_list = Score.objects.filter(paid=True).order_by('-score_value')
-
+  
     current_year = datetime.date.today().isocalendar()[0]
     current_week = datetime.date.today().isocalendar()[1]
     last_week = current_week - 1
-  
+
     context = {
         'score_list': score_list,
         'title': title,
@@ -76,58 +48,85 @@ def all(request):
 
     return render(request, 'viewScoreBoard.html', context=context) 
 
-
-def event(request, event):
-    """Paid scoreboard - Event All"""
-    title = "A L L  S C O R E S @  - " + event.upper() 
-    score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')
-
-    if event == 'miami23':
-        prize = "Prize Pool: 100,000 sats!"
-    else:
-        prize = "Prize Pool: 0 sats"
-
+# Passes top x scrores to viewScoreBoard.html
+def top(request, top):
+    """Scoreboard - TOP"""
+    title = "A L L  T I M E  T O P  " + str(top)
+    score_list = Score.objects.filter(paid=True).order_by('-score_value')[:top]
+  
     current_year = datetime.date.today().isocalendar()[0]
     current_week = datetime.date.today().isocalendar()[1]
     last_week = current_week - 1
-  
+
     context = {
         'score_list': score_list,
         'title': title,
         'current_week': current_week,
         'last_week': last_week,
         'current_year': current_year,
-        'prize': prize
+    }
+
+    return render(request, 'viewScoreBoard.html', context=context)
+
+# Passes all scrores for a given 'event' URL parameter to viewEventScoreBoard.html
+def event(request, event):
+    """Scoreboard - Event All"""
+    title = "A L L  S C O R E S @  - " + event.upper() 
+    score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')
+
+    current_year = datetime.date.today().isocalendar()[0]
+    current_week = datetime.date.today().isocalendar()[1]
+    last_week = current_week - 1
+
+    #TODO Make this a DB/model thing
+    if event == 'miami23':
+        prize = "Prize Pool: 100,000 sats!"
+    else:
+        prize = "Prize Pool: 0 sats"
+  
+    context = {
+        'score_list': score_list,
+        'title': title,
+        'prize': prize,
+        'current_week': current_week,
+        'last_week': last_week,
+        'current_year': current_year
     }
 
     return render(request, 'viewEventScoreBoard.html', context=context)
 
+# Passes top x scrores for a given 'event' URL parameter to viewEventScoreBoard.html
 def eventtop(request, event, top):
-    """Paid scoreboard - Event Top"""
+    """Scoreboard - Event Top"""
 
     title = "T O P  " + str(top) +  " @  - " + event.upper()
     score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')[:top]
 
+    current_year = datetime.date.today().isocalendar()[0]
+    current_week = datetime.date.today().isocalendar()[1]
+    last_week = current_week - 1
+
+    #TODO Make this a DB/model thing
     if event == 'miami23':
         prize = "Prize Pool: 100,000 sats!"
     else:
         prize = "Prize Pool: 0 sats"
-
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
   
     context = {
         'score_list': score_list,
         'title': title,
+        'prize': prize,
         'current_week': current_week,
         'last_week': last_week,
-        'current_year': current_year,
-        'prize': prize
+        'current_year': current_year
     }
 
     return render(request, 'viewEventScoreBoard.html', context=context)
 
+# Passes all scrores for a given 'week' + 'year' URL parameter
+# Current week to viewCurrentWeekScoreBoard.html
+# Last week to viewLastWeekScoreBoard.html
+# Any other week to viewScoreBoard.html
 def date(request, year, week):
     """Paid scoreboard - Date"""
     score_list = Score.objects.filter(score_date__year=year).filter(score_date__week=week).filter(paid=True).order_by('-score_value')
@@ -144,10 +143,10 @@ def date(request, year, week):
         context = {
         'score_list': score_list,
         'title': title,
+        'prize': prize,
         'current_week': current_week,
         'last_week': last_week,
-        'current_year': current_year,
-        'prize': prize
+        'current_year': current_year
         }
 
         return render(request, 'viewCurrentWeekScoreBoard.html', context=context)
@@ -180,6 +179,10 @@ def date(request, year, week):
         
         return render(request, 'viewScoreBoard.html', context=context)
 
+# Passes top x scrores for a given 'week' + 'year' URL parameter
+# Current week to viewCurrentWeekScoreBoard.html
+# Last week to viewLastWeekScoreBoard.html
+# Any other week to viewScoreBoard.html
 def datetop(request, year, week, top):
     """Paid scoreboard - Date"""
     
@@ -233,7 +236,7 @@ def datetop(request, year, week, top):
         
         return render(request, 'viewScoreBoard.html', context=context)
 
-
+# Score entry screen. Called from within the game with a uniquie 'score_id' previously generated by API.
 def enter_details(request, score_id):
     """Paid scoreboard - Enter details"""
 
@@ -261,8 +264,8 @@ def enter_details(request, score_id):
     else:
 
         return HttpResponseBadRequest("Score ID doesn't exist.")
-    
 
+# Score entry screen, pre-populating the 'even_code'. Called from within the game with a uniquie 'score_id' previously generated by API.
 def enter_details_event(request, score_id, event_code):
     """Paid scoreboard - Enter details with Event Code"""
 
@@ -296,8 +299,7 @@ def enter_details_event(request, score_id, event_code):
 
         return HttpResponseBadRequest("Score ID doesn't exist.")
 
-
-
+#Main API for creating scores and getting ZBD invoice. Can get scores too.
 class ScoreboardApiView(APIView):
     # add permission to check if user is authenticated
     permission_classes = (IsAuthenticated,)
@@ -356,7 +358,7 @@ class ScoreboardApiView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
+#Callback API called when there is a sucessful ZBD payment
 class ZBDAPIView(APIView):
     # add permission to check if user is authenticated
     permission_classes = [permissions.AllowAny]
@@ -380,6 +382,7 @@ class ZBDAPIView(APIView):
     
         return Response(data=None, status=status.HTTP_202_ACCEPTED)
 
+#Adds player details to a given score.
 class PaidAPIView(APIView):
     # add permission to check if user is authenticated
     permission_classes = [permissions.AllowAny]
@@ -393,7 +396,7 @@ class PaidAPIView(APIView):
         JSON = request.data
         score_id = JSON["id"]
 
-        #Only allow an update for a known score ID
+        #Only allow 1 update for a known score ID
         if Score.objects.filter(id=score_id).exists():
 
             score = Score.objects.get(id=score_id)
@@ -418,7 +421,7 @@ class PaidAPIView(APIView):
         else:
             return Response(data=None, status=status.HTTP_403_FORBIDDEN)
 
-
+#Checks to see if an invoice has been paid.
 class PaymentCheckAPIView(APIView):
     # add permission to check if user is authenticated
     permission_classes = (IsAuthenticated,)
