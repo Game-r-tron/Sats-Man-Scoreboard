@@ -4,7 +4,7 @@
   {% load filters %}
   <head>
       <title>Sats-Man Scoreboard</title>
-      <META HTTP-EQUIV=”refresh” CONTENT=”15″>
+      <meta http-equiv="refresh" content="10">
       <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
       <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
   </head>
@@ -35,7 +35,7 @@
       {% if Score.nip05 %}
       <a href="https://snort.social/p/{{Score.nip05}}" target="_blank">{{Score.nip05}}</a>
       {% elif Score.npub %}
-      <a href="https://snort.social/p/{{Score.npub}}" target="_blank">{Score.npub|nostr_short}}</a>
+      <a href="https://snort.social/p/{{Score.npub}}" target="_blank">{{Score.npub|nostr_short}}</a>
       {% endif %}
     </td>
     <td align="center"><a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a></td>
