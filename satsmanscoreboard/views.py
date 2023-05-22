@@ -17,9 +17,7 @@ import datetime
 import os
 
 # TODO
-# Pull out current/last week calcs into a single code block
 # Event sepecific prizes into the Model
-# Remove any event scores from any date-based score views.
 # Move API Views out into seperate class
 
 #Import ZBD API key from environment.
@@ -28,15 +26,22 @@ try:
 except KeyError as e:
     raise RuntimeError("Could not find a zbd_api_key in environment") from e
 
+def get_dates():
+
+    today = datetime.date.today().isocalendar()
+    current_week = today[1]
+    current_year = today[0]
+    last_week = current_week - 1
+
+    return current_year, current_week, last_week
+
 # Passes all scrores to viewScoreBoard.html
 def all(request):
     """Paid scoreboard - Top"""
     title = "A L L  S C O R E S  E V E R"
     score_list = Score.objects.filter(paid=True).order_by('-score_value')
   
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     context = {
         'score_list': score_list,
@@ -54,9 +59,7 @@ def top(request, top):
     title = "A L L  T I M E  T O P  " + str(top)
     score_list = Score.objects.filter(paid=True).order_by('-score_value')[:top]
   
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     context = {
         'score_list': score_list,
@@ -74,9 +77,7 @@ def event(request, event):
     title = "A L L  S C O R E S @  - " + event.upper() 
     score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')
 
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     #TODO Make this a DB/model thing
     if event == 'miami23':
@@ -102,9 +103,7 @@ def eventtop(request, event, top):
     title = "T O P  " + str(top) +  " @  - " + event.upper()
     score_list = Score.objects.filter(paid=True).filter(event=event).order_by('-score_value')[:top]
 
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     #TODO Make this a DB/model thing
     if event == 'miami23':
@@ -129,11 +128,9 @@ def eventtop(request, event, top):
 # Any other week to viewScoreBoard.html
 def date(request, year, week):
     """Paid scoreboard - Date"""
-    score_list = Score.objects.filter(score_date__year=year).filter(score_date__week=week).filter(paid=True).order_by('-score_value')
+    score_list = Score.objects.filter(score_date__year=year, score_date__week=week, paid=True, event__isnull=True).order_by('-score_value')
 
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     if week == current_week :
 
@@ -186,11 +183,9 @@ def date(request, year, week):
 def datetop(request, year, week, top):
     """Paid scoreboard - Date"""
     
-    score_list = Score.objects.filter(score_date__year=year).filter(score_date__week=week).filter(paid=True).order_by('-score_value')[:top]
+    score_list = Score.objects.filter(score_date__year=year, score_date__week=week, paid=True, event__isnull=True).order_by('-score_value')[:top]
 
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]
-    last_week = current_week - 1
+    current_year, current_week, last_week = get_dates()
 
     if week == current_week :
 
@@ -241,10 +236,11 @@ def enter_details(request, score_id):
     """Paid scoreboard - Enter details"""
 
     prize = "Prize Pool: 10,000 sats"
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]    
 
-    score_list = Score.objects.filter(score_date__year=current_year).filter(score_date__week=current_week).filter(paid=True).order_by('-score_value')
+    current_year, current_week, last_week = get_dates()
+
+    score_list = Score.objects.filter(score_date__year=current_year, score_date__week=current_week, paid=True, event__isnull=True).order_by('-score_value')
+
     
     if Score.objects.filter(id=score_id).exists():
     
@@ -253,8 +249,6 @@ def enter_details(request, score_id):
         context = {
             'score_id':score_id,
             'score_list':score_list,
-            'current_week': current_week,
-            'current_year': current_year,
             'score': score,
             'prize': prize
         }
@@ -274,9 +268,6 @@ def enter_details_event(request, score_id, event_code):
     else:
         prize = "Prize Pool: 0 sats"
 
-    current_year = datetime.date.today().isocalendar()[0]
-    current_week = datetime.date.today().isocalendar()[1]    
-
     score_list = Score.objects.filter(event=event_code).filter(paid=True).order_by('-score_value')
     
     if Score.objects.filter(id=score_id).exists():
@@ -287,8 +278,6 @@ def enter_details_event(request, score_id, event_code):
             'score_id':score_id,
             'score_list':score_list,
             'event_code':event_code,
-            'current_week': current_week,
-            'current_year': current_year,
             'score': score,
             'prize': prize
         }

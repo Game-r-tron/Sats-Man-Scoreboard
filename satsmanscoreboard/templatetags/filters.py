@@ -1,4 +1,5 @@
 from django import template
+from datetime import datetime
 
 register = template.Library()
 
@@ -11,3 +12,9 @@ def nostr_short(npub):
 @register.filter
 def pretty_score(score):
     return f"{score:,}"
+
+@register.filter
+def pretty_date(datetime):
+    if datetime:
+        return datetime.strftime("%d-%m-%Y %H:%M")
+    return ''

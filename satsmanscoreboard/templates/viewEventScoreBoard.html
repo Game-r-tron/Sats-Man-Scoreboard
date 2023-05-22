@@ -38,14 +38,19 @@
       <a href="https://snort.social/p/{{Score.npub}}" target="_blank">{{Score.npub|nostr_short}}</a>
       {% endif %}
     </td>
-    <td align="center"><a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a></td>
+    <td align="center">
+      {% if Score.ln_address %}
+        <a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a>
+      {% else %}  
+      {% endif %}
+    </td>
     <td align="center">
       {% if Score.twitter_handle %}
-        <a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">@{{Score.twitter_handle}}</a></td>
+        <a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">@{{Score.twitter_handle}}</a>
       {% else %}
       {% endif %}
     </td>
-    <td>{{Score.score_date}}</td>
+    <td>{{Score.score_date|pretty_date}}</td>
   </tr>
   {% endfor %}
 </table>

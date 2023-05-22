@@ -7,6 +7,7 @@
       <META HTTP-EQUIV=”refresh” CONTENT=”15″>
       <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
       <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
+      <script src="{% static 'satsmanscoreboard/javascript/axios.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
 <body>
@@ -94,6 +95,8 @@
         });
         });
 
+        //const test = window.nostr.getPublickKey();
+
   </script>
 
 <h2 align="center">Current Scoreboard</h2>
@@ -110,16 +113,27 @@
     {% for Score in score_list %}
     <tr>
       <td>{{ forloop.counter }}</td>
-      <td>{{Score.score_value}}</td>
-      <td align="center"><a href={% if Score.nip05 %}"https://snort.social/p/{{Score.nip05}}"{% elif Score.npub %}"https://snort.social/p/{{Score.npub}}"{% endif %} target="_blank">{% if Score.nip05 %}
-        {{ Score.nip05 }}
+      <td align="right">{{Score.score_value|pretty_score}}</td>
+      <td align="center">
+        {% if Score.nip05 %}
+          <a href="https://snort.social/p/{{Score.nip05}}" target="_blank">{{Score.nip05}}</a>
         {% elif Score.npub %}
-        {{Score.npub|nostr_short }}
+          <a href="https://snort.social/p/{{Score.npub}}" target="_blank">{{Score.npub|nostr_short}}</a>
+        {% endif %}
+      </td>
+      <td align="center">
+        {% if Score.ln_address %}
+          <a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a>
+        {% else %}  
+        {% endif %}
+      </td>
+      <td align="center">
+        {% if Score.twitter_handle %}
+          <a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">@{{Score.twitter_handle}}</a>
         {% else %}
-        {% endif %}</a>
-      <td align="center"><a href="lightning:{{Score.ln_address}}" target="_blank">{{Score.ln_address}}</a>  
-      <td align="center"><a href="https://twitter.com/{{Score.twitter_handle}}" target="_blank">{{Score.twitter_handle}}</a></td>
-      <td>{{Score.score_date}}</td>
+        {% endif %}
+      </td>
+      <td>{{Score.score_date|pretty_date}}</td>
     </tr>
     {% endfor %}
   </table>
