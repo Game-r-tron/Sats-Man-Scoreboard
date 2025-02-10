@@ -5,6 +5,7 @@ from .views import (
     ZBDAPIView,
     PaidAPIView,
     PaymentCheckAPIView,
+    game_view,
 )
 
 import datetime
@@ -25,4 +26,5 @@ urlpatterns = [
     path('enter-details/<str:score_id>/<str:event_code>', views.enter_details_event, name='score_id_event'),
     path('payment-made', PaidAPIView.as_view()),
     path('payment-check', PaymentCheckAPIView.as_view()),
+    path('game/', game_view, name='game'),
 ]
