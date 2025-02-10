@@ -8,7 +8,6 @@
     <title>Unity WebGL Player | Sats-Man</title>
     <link rel="shortcut icon" href="{% static 'satsmanscoreboard/game/TemplateData/favicon.ico' %}">
     <link rel="stylesheet" href="{% static 'satsmanscoreboard/game/TemplateData/style.css' %}">
-    <link rel="manifest" href="{% static 'satsmanscoreboard/game/manifest.webmanifest' %}">
   </head>
   <body>
     <div id="unity-container">
@@ -22,12 +21,6 @@
       <div id="unity-warning"> </div>
     </div>
     <script>
-      window.addEventListener("load", function () {
-        if ("serviceWorker" in navigator) {
-          navigator.serviceWorker.register("{% static 'satsmanscoreboard/game/ServiceWorker.js' %}");
-        }
-      });
-
       var container = document.querySelector("#unity-container");
       var canvas = document.querySelector("#unity-canvas");
       var loadingBar = document.querySelector("#unity-loading-bar");
