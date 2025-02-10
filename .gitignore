@@ -1,10 +1,11 @@
 # Django #
 *.log
 *.pot
-*.pyc
-__pycache__
+local_settings.py
 db.sqlite3
-media
+db.sqlite3-journal
+media/
+staticfiles/
 
 # Backup files # 
 *.bak 
@@ -45,28 +46,29 @@ out/
 # JIRA plugin
 atlassian-ide-plugin.xml
 
-# Python # 
-*.py[cod] 
-*$py.class 
+# Python #
+*.py[cod]
+__pycache__/
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
 # Distribution / packaging 
-.Python build/ 
-develop-eggs/ 
-dist/ 
-downloads/ 
-eggs/ 
-.eggs/ 
-lib/ 
-lib64/ 
-parts/ 
-sdist/ 
-var/ 
-wheels/ 
-*.egg-info/ 
-.installed.cfg 
-*.egg 
-*.manifest 
-*.spec 
+
 
 # Installer logs 
 pip-log.txt 
@@ -97,13 +99,12 @@ celerybeat-schedule.*
 *.sage.py 
 
 # Environments 
-.env 
-.venv 
-env/ 
-venv/ 
-ENV/ 
-env.bak/ 
-venv.bak/ 
+.env
+.venv/
+env/
+venv/
+ENV/
+
 
 # mkdocs documentation 
 /site 
@@ -138,3 +139,11 @@ GitHub.sublime-settings
 Scoreboard/.DS_Store
 .DS_Store
 satsmanscoreboard/config.py
+
+# IDE
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
