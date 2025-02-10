@@ -36,7 +36,10 @@ except KeyError as e:
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
-#ALLOWED_HOSTS = ['games.gamertron.net']
+CSRF_TRUSTED_ORIGINS = ['https://*.repl.co', 'https://*.replit.dev', 'https://games.gamertron.net']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # Application definition
