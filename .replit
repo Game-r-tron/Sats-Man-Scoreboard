@@ -16,7 +16,8 @@ task = "shell.exec"
 args = "python manage.py runserver 0.0.0.0:3000"
 
 [deployment]
-run = ["sh", "-c", "gunicorn gamertron.wsgi:application --bind 0.0.0.0:3000"]
+run = ["sh", "-c", "gunicorn gamertron.wsgi:application --bind 0.0.0.0:3000 --preload"]
+build = ["sh", "-c", "python manage.py collectstatic --noinput"]
 
 [[ports]]
 localPort = 3000
