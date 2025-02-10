@@ -1,17 +1,18 @@
+
 <!DOCTYPE html>
 <html lang="en">
   {% load static %}
   {% load filters %}
   <head>
       <title>Sats-Man Scoreboard</title>
-      <META HTTP-EQUIV=”refresh” CONTENT=”15″>
-      <link rel="stylesheet" href="{% static 'satsmanscoreboard/css/scoreboard.css' %}">
-      <script src="{% static 'satsmanscoreboard/javascript/google-analytics.js' %}""></script>
+      <META HTTP-EQUIV="refresh" CONTENT="15″>
+      <link rel="stylesheet" href="/staticfiles/satsmanscoreboard/css/scoreboard.css">
+      <script src="/staticfiles/satsmanscoreboard/javascript/google-analytics.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   </head>
 <body>
 <p align="center">
-  <span><a href="lightning:lnurl1dp68gurn8ghj7ctsdyh85etzv4jx2efwd9hj7a3s9aex2ut4v4ehgttnw3shg6tr943ksctjvajhxte5xymk2cnrvvcz6cfsxcmj6dp4x3jj6cnz89jz6vpkv4jkxvmzve3nzd35x92n7t"><img src="{% static 'satsmanscoreboard/images/zbd-lnurl.png' %}" alt="ZBD LNURL" width="200" height="200"></a></span>    <span><a href="https://sites.google.com/nathanday.net/gamertron/sats-man" target="_blank"><img src="{% static 'satsmanscoreboard/images/sats-man-logo.png' %}" alt="Sats-Man Logo"></a></span>    <span><a href="http://gamertron.net" target="_blank"><img src="{% static 'satsmanscoreboard/images/gamertron-logo.jpg' %}" alt="Gamertron Logo" width="200" height="200"></a></span>
+  <span><a href="lightning:lnurl1dp68gurn8ghj7ctsdyh85etzv4jx2efwd9hj7a3s9aex2ut4v4ehgttnw3shg6tr943ksctjvajhxte5xymk2cnrvvcz6cfsxcmj6dp4x3jj6cnz89jz6vpkv4jkxvmzve3nzd35x92n7t"><img src="/staticfiles/satsmanscoreboard/images/zbd-lnurl.png" alt="ZBD LNURL" width="200" height="200"></a></span>    <span><a href="https://sites.google.com/nathanday.net/gamertron/sats-man" target="_blank"><img src="/staticfiles/satsmanscoreboard/images/sats-man-logo.png" alt="Sats-Man Logo"></a></span>    <span><a href="http://gamertron.net" target="_blank"><img src="/staticfiles/satsmanscoreboard/images/gamertron-logo.jpg" alt="Gamertron Logo" width="200" height="200"></a></span>
 </p>
 <h1 align="center">Your score is {{score}}</h1>
 <h1 align="center">{{prize}}</h1>
@@ -51,7 +52,6 @@
 </div> 
 
     <script>
-
         document.getElementById('data-form').addEventListener('submit', function(e) {
           
         e.preventDefault();
@@ -131,7 +131,6 @@
         {% endif %}
       </td>
       <td>{{Score.score_date|pretty_date}}</td>
-    </tr>
     </tr>
     {% endfor %}
   </table>
