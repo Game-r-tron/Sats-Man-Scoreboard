@@ -18,7 +18,7 @@ from django.urls import include, path
 from django.views.generic import RedirectView
 
 urlpatterns = [
-    #path('', RedirectView.as_view(url='satsman-scoreboard/', permanent=True)),
+    path('', TemplateView.as_view(template_name='index.html'), name='home'),
     path('admin/', admin.site.urls),
     path('satsman-scoreboard/',include('satsmanscoreboard.urls')),
     path('api-auth/',include('rest_framework.urls')),
