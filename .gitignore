@@ -4,6 +4,8 @@
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+development.sqlite3
+production.sqlite3
 media/
 staticfiles/
 
